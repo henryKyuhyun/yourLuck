@@ -3,6 +3,7 @@ package com.yourLuck.yourLuck.service;
 import com.yourLuck.yourLuck.model.BloodType;
 import com.yourLuck.yourLuck.model.Fortune;
 import com.yourLuck.yourLuck.model.Gender;
+import com.yourLuck.yourLuck.model.User;
 import com.yourLuck.yourLuck.model.entity.UserEntity;
 import com.yourLuck.yourLuck.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +30,20 @@ public class LuckService {
     }
 
 //    오늘의 날짜 -> 숫자
-public int registrationDateToNumber(UserEntity userEntity) {
-    Timestamp timestamp = userEntity.getRegisteredAt();
+public int registrationDateToNumber(User user) {
+    Timestamp timestamp = user.getRegisteredAt();
     LocalDate registrationDate = timestamp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     return registrationDate.getMonthValue() * 100 + registrationDate.getDayOfMonth();
 }
 
-    public String calculateFortune(UserEntity userEntity) {
-        int nameLength = userEntity.getUserName().length();
-        int bloodTypeNumber = bloodTypeToNumber(userEntity.getBloodType());
-        int genderNumber = genderToNumber(userEntity.getGender());
-        int todayNumber = registrationDateToNumber(userEntity);
-        int birthNumber = userEntity.getBirthOfDayAndTime().getDayOfYear();
-        int registrationNumber = registrationDateToNumber(userEntity);
+    public String calculateFortune(User user) {
+        int nameLength = user.getUsername().length();
+        int bloodTypeNumber = bloodTypeToNumber(user.getBloodType());
+        int genderNumber = genderToNumber(user.getGender());
+        int registrationNumber = registrationDateToNumber(user);
+        int birthNumber = user.getBirthOfDayAndTime().getDayOfYear();
 
-        int totalNumber = nameLength + bloodTypeNumber + genderNumber + todayNumber + birthNumber + registrationNumber;
+        int totalNumber = nameLength + bloodTypeNumber + genderNumber + registrationNumber + birthNumber;
         int remainder = totalNumber % Fortune.values().length;
 
         return Fortune.values()[remainder].getMessage();
