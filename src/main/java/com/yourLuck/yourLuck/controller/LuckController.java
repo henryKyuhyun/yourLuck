@@ -25,4 +25,11 @@ public class LuckController {
         responseDTO.setMessage(message);
         return Response.success(responseDTO);
     }
+
+    @GetMapping("/lotto")
+    public Response<int[]> getLottoNumbers(@AuthenticationPrincipal User user) {
+        int[] lottoNumbers = luckService.generateLottoNumber(user);
+        return Response.success(lottoNumbers);
+    }
+
 }

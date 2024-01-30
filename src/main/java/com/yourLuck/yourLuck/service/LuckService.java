@@ -79,27 +79,5 @@ public int registrationDateToNumber(User user) {
         Arrays.sort(result);
         return result;
     }
-//    public int[] generateLottoNumber(User user) {
-//        int totalNumber = calculateTotalNumber(user);
-//        Random random = new Random(totalNumber);
-//
-//        int[] count = new int[46];
-//        for(long i = 0; i < 10000000000L; i++){
-//            count[random.nextInt(45) + 1]++;
-//        }
-//        int[] result = new int[6];
-//        for(int i=0; i< 6; i++){
-//            int maxIndex = 0;
-//            for(int j = 1; j<count.length; j++){
-//                if(count[j] > count[maxIndex]){
-//                    maxIndex = j;
-//                }
-//            }
-//            result[i] = maxIndex;
-//            count[maxIndex] = -1;
-//        }
-//        Arrays.sort(result);
-//        return result;
-//    }
 
 }
