@@ -1,12 +1,21 @@
 package com.yourLuck.yourLuck.controller;
 
+import com.yourLuck.yourLuck.controller.request.PostCommentRequest;
 import com.yourLuck.yourLuck.controller.request.PostCreateRequest;
 import com.yourLuck.yourLuck.controller.request.PostModifyRequest;
+import com.yourLuck.yourLuck.controller.response.CommentResponse;
 import com.yourLuck.yourLuck.controller.response.PostResponse;
 import com.yourLuck.yourLuck.controller.response.Response;
+import com.yourLuck.yourLuck.exception.ErrorCode;
+import com.yourLuck.yourLuck.exception.LuckApplicationException;
+import com.yourLuck.yourLuck.model.Comment;
 import com.yourLuck.yourLuck.model.Post;
+import com.yourLuck.yourLuck.model.entity.CommentEntity;
+import com.yourLuck.yourLuck.repository.CommentEntityRepository;
 import com.yourLuck.yourLuck.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
 
     private final PostService postService;
+    private final CommentEntityRepository commentEntityRepository;
 
 //    @PostMapping
 //    public Response<Void> create(@RequestBody PostCreateRequest request, Authentication authentication){
@@ -49,5 +59,36 @@ public class PostController {
     @GetMapping("/{postId}/likes")
     public Response<Long> likeCount(@PathVariable Integer postId) {
         return Response.success(postService.likeCount(postId));
+    }
+
+//    @PostMapping("/{postId}/comments")
+//    public Response<Comment> comment(@PathVariable Integer postId, @RequestBody PostCommentRequest request, Authentication authentication,CommentEntity.) {
+//
+//        Comment comment = postService.comment(postId, authentication.getName(),request.getComment(), );
+//        return Response.success(comment);
+//    }
+@PostMapping("/{postId}/comments")
+public Response<Comment> comment(@PathVariable Integer postId, @RequestBody PostCommentRequest request, Authentication authentication) {
+    CommentEntity parent = null;
+    if(request.getParentId() != null){
+        parent = commentEntityRepository.findById(request.getParentId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid parentId: " + request.getParentId()));
+    }
+    Comment comment = postService.comment(postId,
+            authentication.getName(),
+            request.getComment(),
+            parent);
+    return Response.success(comment);
+}
+
+    @GetMapping("/{postId}/comments")
+    public Response<Page<CommentResponse>> getComment(@PathVariable Integer postId, Pageable pageable) {
+            return Response.success(postService.getComments(postId, pageable).map(CommentResponse::fromComment));
+    }
+
+    @DeleteMapping("/{postId}/comments")
+    public Response<Void> deleteComment(@PathVariable Integer postId, Authentication authentication) {
+        postService.deleteComment(postId, authentication);
+        return Response.success();
     }
 }

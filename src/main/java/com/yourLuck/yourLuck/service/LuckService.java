@@ -41,13 +41,19 @@ public int registrationDateToNumber(User user) {
 }
 
     public String calculateFortune(User user) {
+
+        LocalDate today = LocalDate.now();
         int nameLength = user.getUsername().length();
         int bloodTypeNumber = bloodTypeToNumber(user.getBloodType());
         int genderNumber = genderToNumber(user.getGender());
         int registrationNumber = registrationDateToNumber(user);
         int birthNumber = user.getBirthOfDayAndTime().getDayOfYear();
-
-        int totalNumber = nameLength + bloodTypeNumber + genderNumber + registrationNumber + birthNumber;
+/*
+        100을 곱하는 이유는 각 날짜마자 고유한 숫자를 주기위함이다 예를들어 1월 2일과 2월 1일은 그냥 더하기만 하면 동일한 숫자지만
+        곱하게된다면 102, 201 이런식으로다른숫자가 나오기떄문.
+ */
+        int todayNumber = today.getMonthValue() * 100 + today.getDayOfMonth();
+        int totalNumber = nameLength + bloodTypeNumber + genderNumber + registrationNumber + birthNumber + todayNumber;
         int remainder = totalNumber % Fortune.values().length;
 
         return Fortune.values()[remainder].getMessage();
