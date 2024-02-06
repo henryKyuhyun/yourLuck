@@ -42,11 +42,7 @@ public class PostService {
         return postEntityRepository.findById(postId).orElseThrow(() ->
                 new LuckApplicationException(ErrorCode.USER_NOT_FOUNDED, String.format("%s not founded", postId)));
     }
-//    @Transactional
-//    public void create(String title, String content, String userName) {
-//        UserEntity userEntity = getUserEntityOrException(userName);
-//        postEntityRepository.save(PostEntity.of(title,content,userEntity));
-//    }
+
     @Transactional
     public Post create(String title, String content, String userName) {
         UserEntity userEntity = getUserEntityOrException(userName);

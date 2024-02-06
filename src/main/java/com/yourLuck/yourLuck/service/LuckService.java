@@ -1,10 +1,9 @@
 package com.yourLuck.yourLuck.service;
 
-import com.yourLuck.yourLuck.model.BloodType;
-import com.yourLuck.yourLuck.model.Fortune;
-import com.yourLuck.yourLuck.model.Gender;
-import com.yourLuck.yourLuck.model.User;
+import com.yourLuck.yourLuck.model.*;
+import com.yourLuck.yourLuck.model.entity.LuckEntity;
 import com.yourLuck.yourLuck.model.entity.UserEntity;
+import com.yourLuck.yourLuck.repository.LuckEntityRepository;
 import com.yourLuck.yourLuck.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -22,6 +23,7 @@ import java.util.stream.IntStream;
 public class LuckService {
 
     private final UserEntityRepository userEntityRepository;
+    private final LuckEntityRepository luckEntityRepository;
 
 //    혈핵형 -> 숫자
     public int bloodTypeToNumber(BloodType bloodType) {
@@ -56,8 +58,17 @@ public int registrationDateToNumber(User user) {
         int totalNumber = nameLength + bloodTypeNumber + genderNumber + registrationNumber + birthNumber + todayNumber;
         int remainder = totalNumber % Fortune.values().length;
 
-        return Fortune.values()[remainder].getMessage();
+        Fortune fortune = Fortune.values()[remainder];
+        String message = fortune.getMessage();
+//        운세 db저장
+        UserEntity userEntity = userEntityRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found"));
+        LuckEntity luckEntity = LuckEntity.of(userEntity, fortune);
+        luckEntityRepository.save(luckEntity);
+
+//        return Fortune.values()[remainder].getMessage();
+        return message;
     }
+
 
     private int calculateTotalNumber(User user) {
         int nameLength = user.getUsername().length();
@@ -84,6 +95,13 @@ public int registrationDateToNumber(User user) {
                 .toArray();
         Arrays.sort(result);
         return result;
+    }
+
+    public List<Luck> getLuckHistory(Integer userId) {
+        UserEntity userEntity = userEntityRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not founded"));
+        return luckEntityRepository.findByUser(userEntity).stream()
+                .map(Luck::fromEntity)
+                .collect(Collectors.toList());
     }
 
 }

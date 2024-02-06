@@ -30,18 +30,17 @@ public class Comment {
                 entity.getComment(),
                 entity.getUser().getUserName(),
                 entity.getPost().getId(),
-                entity.getParent() != null ? entity.getParent().getId() : null, // 수정
+                entity.getParent() != null ? entity.getParent().getId() : null,
                 new ArrayList<>(),  // children 초기화
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getDeletedAt()
         );
-        for(CommentEntity child : entity.getChildren()) { // 추가
+        for(CommentEntity child : entity.getChildren()) {
             comment.getChildren().add(fromEntity(child));
         }
         return comment;
     }
-
 
 
 }

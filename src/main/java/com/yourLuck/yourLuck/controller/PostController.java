@@ -60,13 +60,7 @@ public class PostController {
     public Response<Long> likeCount(@PathVariable Integer postId) {
         return Response.success(postService.likeCount(postId));
     }
-
-//    @PostMapping("/{postId}/comments")
-//    public Response<Comment> comment(@PathVariable Integer postId, @RequestBody PostCommentRequest request, Authentication authentication,CommentEntity.) {
-//
-//        Comment comment = postService.comment(postId, authentication.getName(),request.getComment(), );
-//        return Response.success(comment);
-//    }
+    
 @PostMapping("/{postId}/comments")
 public Response<Comment> comment(@PathVariable Integer postId, @RequestBody PostCommentRequest request, Authentication authentication) {
     CommentEntity parent = null;

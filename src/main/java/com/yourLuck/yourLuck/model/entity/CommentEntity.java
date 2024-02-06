@@ -1,7 +1,6 @@
 package com.yourLuck.yourLuck.model.entity;
 
 import com.yourLuck.yourLuck.model.CommentStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -77,6 +76,5 @@ public class CommentEntity {
         entity.setParent(parent);
         return entity;
     }
-
 
 }
