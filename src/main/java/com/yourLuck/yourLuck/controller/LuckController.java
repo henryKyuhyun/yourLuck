@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/users/luck")
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class LuckController {
 
     @GetMapping("/lotto")
     public Response<int[]> getLottoNumbers(@AuthenticationPrincipal User user) {
-        int[] lottoNumbers = luckService.generateLottoNumber(user);
+        int[] lottoNumbers = luckService.generateLottoNumber();
         return Response.success(lottoNumbers);
     }
 

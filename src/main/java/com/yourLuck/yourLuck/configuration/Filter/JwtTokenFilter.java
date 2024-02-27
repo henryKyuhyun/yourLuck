@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -25,7 +24,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final String key;
     private final UserService userService;
-    private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/login");
+//    private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/login");
+    private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/login", "/api/v1/users/join");
 
 
     @Override

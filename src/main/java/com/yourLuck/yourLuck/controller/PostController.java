@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
@@ -27,11 +28,6 @@ public class PostController {
     private final PostService postService;
     private final CommentEntityRepository commentEntityRepository;
 
-//    @PostMapping
-//    public Response<Void> create(@RequestBody PostCreateRequest request, Authentication authentication){
-//        postService.create(request.getTitle(), request.getContent(), authentication.getName());
-//        return Response.success();
-//    }
     @PostMapping
     public Response<Post> create(@RequestBody PostCreateRequest request, Authentication authentication) {
         Post post = postService.create(request.getTitle(), request.getContent(), authentication.getName());

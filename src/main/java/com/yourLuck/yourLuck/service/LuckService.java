@@ -80,9 +80,8 @@ public int registrationDateToNumber(User user) {
         return nameLength + bloodTypeNumber + genderNumber + registrationNumber + birthNumber;
     }
 
-    public int[] generateLottoNumber(User user){
-        int totalNumber = calculateTotalNumber(user);
-        Random random = new Random(totalNumber);
+    public int[] generateLottoNumber(){
+        Random random = new Random();
 
         int[] count = new int[46];
         IntStream.range(0,100000000).forEach(i -> count[random.nextInt(45) + 1]++);

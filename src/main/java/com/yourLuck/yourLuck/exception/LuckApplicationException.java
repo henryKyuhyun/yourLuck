@@ -2,6 +2,7 @@ package com.yourLuck.yourLuck.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @AllArgsConstructor
 @Getter
