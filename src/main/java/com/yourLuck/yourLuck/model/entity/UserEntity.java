@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -39,6 +41,9 @@ public class UserEntity {
     private Timestamp updatedAt;
     @Column(name = "removed_at")
     private Timestamp deletedAt;
+
+    @ManyToMany(mappedBy = "users")
+    private Set<ChatRoomEntity> chatRooms = new HashSet<>();
 
     @PrePersist
     void registeredAt(){

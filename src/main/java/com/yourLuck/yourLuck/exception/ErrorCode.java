@@ -13,11 +13,13 @@ public enum ErrorCode {
 
     USER_NOT_FOUNDED(HttpStatus.NOT_FOUND,"User not founded"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED,"token is invalid"),
-
+    CHATROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "ChatRoom Not Founded"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED,"User Password wrong"),
     POST_NOT_FOUNDED(HttpStatus.NOT_FOUND,"Post not founded"),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED,"Permission is invalid"),
-    ALREADY_LIKED(HttpStatus.CONFLICT,"User already liked the post")
+    ALREADY_LIKED(HttpStatus.CONFLICT,"User already liked the post"),
+    ALREADY_EXISTING_CHAT_ROOM_NAME(HttpStatus.CONFLICT,"The ChatRoomName already existing")
+
     ;
     private HttpStatus status;
     private String message;
