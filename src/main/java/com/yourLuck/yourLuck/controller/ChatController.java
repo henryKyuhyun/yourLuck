@@ -28,12 +28,8 @@ public class ChatController {
 
     @PostMapping("/rooms") // 엔드포인트를 복수형으로 변경
     public ResponseEntity<CreateChatRoomResponse> createChatRoom(@RequestBody CreateChatRoomRequest request) {
-        // `chatService.createChatRoom`은 채팅방 생성 후 `ChatRoom` 객체를 반환해야 함
         ChatRoom chatRoom = chatService.createChatRoom(request.getChatRoomName(), request.getUserName());
-
-        // `ChatRoom` 객체로부터 `CreateChatRoomResponse` DTO 생성
         CreateChatRoomResponse response = chatRoom.createChatRoomResponse();
-
         return new ResponseEntity<>(response, HttpStatus.CREATED); // 201 Created 상태 코드 설정
     }
 
@@ -48,10 +44,7 @@ public ResponseEntity<ChatRoomJoinResponse> joinChatRoom(
     String userName = authentication.getName(); // 현재 인증된 사용자 이름 가져오기
 
     ChatRoom chatRoom = chatService.joinChatRoom(roomId, userName, joinRequest.getChatRoomName());
-    ChatRoomJoinResponse response = new ChatRoomJoinResponse(
-            roomId, // 혹은 chatRoom.getRoomId() 사용 가능
-            chatRoom.getChatRoomName(),
-            userName);
+    ChatRoomJoinResponse response = new ChatRoomJoinResponse(roomId, chatRoom.getChatRoomName(), userName);
 
     return ResponseEntity.ok(response);
 }

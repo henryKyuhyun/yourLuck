@@ -43,20 +43,19 @@ public class ChatService {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(()->
                 new LuckApplicationException(ErrorCode.USER_NOT_FOUNDED, String.format("%s not founded", chatRoomId)));
     }
-@Transactional
-public ChatRoom createChatRoom(String chatRoomName, String userName) {
-    // 채팅방 이름으로 기존 채팅방이 있는지 체크
-    Optional<ChatRoomEntity> existingChatRoom = chatRoomRepository.findByChatRoomName(chatRoomName);
-    if(existingChatRoom.isPresent()) {
+    @Transactional
+    public ChatRoom createChatRoom(String chatRoomName, String userName) {
+        // 채팅방 이름으로 기존 채팅방이 있는지 체크
+        Optional<ChatRoomEntity> existingChatRoom = chatRoomRepository.findByChatRoomName(chatRoomName);
+        if(existingChatRoom.isPresent()) {
         // 이미 채팅방이 존재하므로 에러를 던지기
         throw new LuckApplicationException(ErrorCode.ALREADY_EXISTING_CHAT_ROOM_NAME, "The ChatRoomName already existing");
-
     }
     // 새로운 채팅방 생성 로직
-    UserEntity userEntity = getUserEntityOrException(userName);
-    ChatRoomEntity chatRoomEntity = chatRoomRepository.save(ChatRoomEntity.of(chatRoomName, userEntity));
-    return ChatRoom.fromEntity(chatRoomEntity);
-}
+        UserEntity userEntity = getUserEntityOrException(userName);
+        ChatRoomEntity chatRoomEntity = chatRoomRepository.save(ChatRoomEntity.of(chatRoomName, userEntity));
+        return ChatRoom.fromEntity(chatRoomEntity);
+    }
 
 
     @Transactional
@@ -79,7 +78,6 @@ public ChatRoom createChatRoom(String chatRoomName, String userName) {
 
         // userName을 추출
         String userName = userEntity.getUserName();
-
         // messageEntity를 생성하고 저장, 이 때부터 id 사용 가능
         MessageEntity messageEntity = MessageEntity.of(chatRoomEntity, sendMessageRequest.getMessageContent(), userName);
         messageRepository.save(messageEntity);
