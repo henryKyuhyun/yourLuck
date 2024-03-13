@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">1</div>
+<div class="counter">2</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.066s</div>
+<div class="counter">0.088s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,12 @@
 </thead>
 <tr>
 <td class="success">Duplicated_UserName()</td>
-<td class="success">0.066s</td>
+<td class="success">0.007s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">joinTest()</td>
+<td class="success">0.081s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,21 +92,12 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>19:35:47.132 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
-19:35:47.146 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
-19:35:47.174 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.yourLuck.yourLuck.controller.UserControllerTest] from class [org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper]
-19:35:47.183 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.yourLuck.yourLuck.controller.UserControllerTest], using SpringBootContextLoader
-19:35:47.186 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.yourLuck.yourLuck.controller.UserControllerTest]: class path resource [com/yourLuck/yourLuck/controller/UserControllerTest-context.xml] does not exist
-19:35:47.186 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.yourLuck.yourLuck.controller.UserControllerTest]: class path resource [com/yourLuck/yourLuck/controller/UserControllerTestContext.groovy] does not exist
-19:35:47.186 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.yourLuck.yourLuck.controller.UserControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
-19:35:47.186 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.yourLuck.yourLuck.controller.UserControllerTest]: UserControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-19:35:47.229 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.yourLuck.yourLuck.controller.UserControllerTest]
-19:35:47.260 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/Users/kyuhyunpark/Desktop/yourLuck/build/classes/java/main/com/yourLuck/yourLuck/YourLuckApplication.class]
-19:35:47.260 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.yourLuck.yourLuck.YourLuckApplication for test class com.yourLuck.yourLuck.controller.UserControllerTest
-19:35:47.262 [Test worker] DEBUG org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - @TestExecutionListeners is not present for class [com.yourLuck.yourLuck.controller.UserControllerTest]: using defaults.
-19:35:47.262 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
-19:35:47.270 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@75f5fd58, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@37b70343, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@306851c7, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@12bcd0c0, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@4879f0f2, org.springframework.test.context.support.DirtiesContextTestExecutionListener@47db5fa5, org.springframework.test.context.transaction.TransactionalTestExecutionListener@354fc8f0, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@41813449, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@4678a2eb, org.springframework.test.context.event.EventPublishingTestExecutionListener@5b43fbf6, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@1080b026, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@58ebfd03, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@5b07730f, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@1fdfafd2, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@a4b2d8f, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@dcfda20, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@6d304f9d]
-19:35:47.272 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@66ce957f testClass = UserControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@55b5f5d2 testClass = UserControllerTest, locations = '{}', classes = '{class com.yourLuck.yourLuck.YourLuckApplication}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@6fb365ed, org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@46dffdc3, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@86cc647, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@cabc2ad, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@7203c7ff, [ImportsContextCustomizer@5bfa8cc5 key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration, org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration, org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@33b1c5c5, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@9ef8eb7, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@c3f20454, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@0], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+<pre>2024-03-11 17:17:35.754  INFO 9136 --- [    Test worker] .b.t.a.w.s.WebMvcTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.yourLuck.yourLuck.controller.UserControllerTest], using SpringBootContextLoader
+2024-03-11 17:17:35.755  INFO 9136 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [com.yourLuck.yourLuck.controller.UserControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2024-03-11 17:17:35.755  INFO 9136 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.yourLuck.yourLuck.controller.UserControllerTest]: UserControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-03-11 17:17:35.763  INFO 9136 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.yourLuck.yourLuck.YourLuckApplication for test class com.yourLuck.yourLuck.controller.UserControllerTest
+2024-03-11 17:17:35.764  INFO 9136 --- [    Test worker] .b.t.a.w.s.WebMvcTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener, org.springframework.security.test.context.support.ReactorContextTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2024-03-11 17:17:35.764  INFO 9136 --- [    Test worker] .b.t.a.w.s.WebMvcTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@16ef07fa, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@7227e3f1, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@245b009a, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@50ccd6a, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@6bb2dae6, org.springframework.test.context.support.DirtiesContextTestExecutionListener@26c7940a, org.springframework.test.context.transaction.TransactionalTestExecutionListener@5a640f98, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@39e0fe23, org.springframework.security.test.context.support.WithSecurityContextTestExecutionListener@44f86613, org.springframework.test.context.event.EventPublishingTestExecutionListener@5e05dd42, org.springframework.security.test.context.support.ReactorContextTestExecutionListener@246701d5, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@1ac8f29c, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@1d07d728, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@6d98e607, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@71ed3bc8, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@2c6c6b7b, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@f714749]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -111,26 +107,63 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v2.6.7)
 
-2024-02-29 19:35:47.681  INFO 40586 --- [    Test worker] c.y.y.controller.UserControllerTest      : Starting UserControllerTest using Java 17.0.6 on kyuhyuns-MacBook-Pro.local with PID 40586 (started by kyuhyunpark in /Users/kyuhyunpark/Desktop/yourLuck)
-2024-02-29 19:35:47.682  INFO 40586 --- [    Test worker] c.y.y.controller.UserControllerTest      : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2024-02-29 19:35:48.266  WARN 40586 --- [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+2024-03-11 17:17:35.776  INFO 9136 --- [    Test worker] c.y.y.controller.UserControllerTest      : Starting UserControllerTest using Java 17.0.6 on kyuhyuns-MacBook-Pro.local with PID 9136 (started by kyuhyunpark in /Users/kyuhyunpark/Desktop/yourLuck)
+2024-03-11 17:17:35.776  INFO 9136 --- [    Test worker] c.y.y.controller.UserControllerTest      : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2024-03-11 17:17:35.893  WARN 9136 --- [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: 60e4c2eb-5e47-4a26-85cd-6036e5a1c551
+Using generated security password: fad51a37-5db4-4560-9952-5f10555732c3
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2024-02-29 19:35:48.292  WARN 40586 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore Regex [pattern='^(?!/api/).*']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2024-02-29 19:35:48.292  INFO 40586 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure Regex [pattern='^(?!/api/).*']
-2024-02-29 19:35:48.292  WARN 40586 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore Ant [pattern='/api/*/users/join', POST]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2024-02-29 19:35:48.292  INFO 40586 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure Ant [pattern='/api/*/users/join', POST]
-2024-02-29 19:35:48.292  WARN 40586 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore Ant [pattern='/api/*/users/login', POST]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
-2024-02-29 19:35:48.292  INFO 40586 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure Ant [pattern='/api/*/users/login', POST]
-2024-02-29 19:35:48.317  INFO 40586 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@782fd504, org.springframework.security.web.context.SecurityContextPersistenceFilter@489110c2, org.springframework.security.web.header.HeaderWriterFilter@6d874695, org.springframework.security.web.authentication.logout.LogoutFilter@2616b618, com.yourLuck.yourLuck.configuration.Filter.JwtTokenFilter@1537c744, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@150fc7a7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@649b5891, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@37314843, org.springframework.security.web.session.SessionManagementFilter@45bbc52f, org.springframework.security.web.access.ExceptionTranslationFilter@42cf6349, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@40a1b6d4]
-2024-02-29 19:35:48.584  INFO 40586 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2024-02-29 19:35:48.584  INFO 40586 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2024-02-29 19:35:48.585  INFO 40586 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2024-02-29 19:35:48.599  INFO 40586 --- [    Test worker] c.y.y.controller.UserControllerTest      : Started UserControllerTest in 1.304 seconds (JVM running for 1.832)
-2024-02-29 19:35:48.658 ERROR 40586 --- [    Test worker] c.y.y.exception.GlobalControllerAdvice   : Error occurs com.yourLuck.yourLuck.exception.LuckApplicationException: User Name is duplicated. test is duplicated
+2024-03-11 17:17:35.896  WARN 9136 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore Regex [pattern='^(?!/api/).*']. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-03-11 17:17:35.896  INFO 9136 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure Regex [pattern='^(?!/api/).*']
+2024-03-11 17:17:35.896  WARN 9136 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore Ant [pattern='/api/*/users/join', POST]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-03-11 17:17:35.896  INFO 9136 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure Ant [pattern='/api/*/users/join', POST]
+2024-03-11 17:17:35.896  WARN 9136 --- [    Test worker] o.s.s.c.a.web.builders.WebSecurity       : You are asking Spring Security to ignore Ant [pattern='/api/*/users/login', POST]. This is not recommended -- please use permitAll via HttpSecurity#authorizeHttpRequests instead.
+2024-03-11 17:17:35.896  INFO 9136 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will not secure Ant [pattern='/api/*/users/login', POST]
+2024-03-11 17:17:35.913  INFO 9136 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@190677c6, org.springframework.security.web.context.SecurityContextPersistenceFilter@588b2d7a, org.springframework.security.web.header.HeaderWriterFilter@2df05bd1, org.springframework.security.web.authentication.logout.LogoutFilter@36d1ac55, com.yourLuck.yourLuck.configuration.Filter.JwtTokenFilter@62c019bb, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@656dc20f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4a6c33a0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7334dcbe, org.springframework.security.web.session.SessionManagementFilter@6d821475, org.springframework.security.web.access.ExceptionTranslationFilter@12e5f7cb, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1fce17b8]
+2024-03-11 17:17:36.015  INFO 9136 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2024-03-11 17:17:36.015  INFO 9136 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2024-03-11 17:17:36.015  INFO 9136 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2024-03-11 17:17:36.021  INFO 9136 --- [    Test worker] c.y.y.controller.UserControllerTest      : Started UserControllerTest in 0.256 seconds (JVM running for 3.411)
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/v1/users/join
+       Parameters = {}
+          Headers = [Content-Type:&quot;application/json;charset=UTF-8&quot;, Content-Length:&quot;140&quot;]
+             Body = {&quot;name&quot;:&quot;test&quot;,&quot;password&quot;:&quot;password&quot;,&quot;nation&quot;:&quot;nation&quot;,&quot;birthOfDayAndTime&quot;:[2024,3,11,17,17,36,26532000],&quot;bloodType&quot;:&quot;A형&quot;,&quot;gender&quot;:&quot;MALE&quot;}
+    Session Attrs = {}
+
+Handler:
+             Type = com.yourLuck.yourLuck.controller.UserController
+           Method = com.yourLuck.yourLuck.controller.UserController#join(UserJoinRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [Access-Control-Allow-Origin:&quot;http://localhost:3000&quot;, Access-Control-Allow-Credentials:&quot;true&quot;, Access-Control-Allow-Methods:&quot;*&quot;, Access-Control-Max-Age:&quot;3600&quot;, Access-Control-Allow-Headers:&quot;Origin, X-Requested-With, Content-Type, Accept, Authorization&quot;, Vary:&quot;Origin&quot;, &quot;Access-Control-Request-Method&quot;, &quot;Access-Control-Request-Headers&quot;, Content-Type:&quot;application/json&quot;]
+     Content type = application/json
+             Body = {&quot;resultCode&quot;:&quot;SUCCESS&quot;,&quot;result&quot;:{&quot;id&quot;:null,&quot;userName&quot;:&quot;test&quot;,&quot;nation&quot;:&quot;nation&quot;,&quot;birthOfDayAndTime&quot;:&quot;2024-03-11T17:17:36.026532&quot;,&quot;bloodType&quot;:&quot;A형&quot;,&quot;gender&quot;:&quot;MALE&quot;}}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+2024-03-11 17:17:36.110 ERROR 9136 --- [    Test worker] c.y.y.exception.GlobalControllerAdvice   : Error occurs com.yourLuck.yourLuck.exception.LuckApplicationException: User Name is duplicated. test is duplicated
 </pre>
 </span>
 </div>
@@ -142,7 +175,7 @@ This generated password is for development use only. Your security configuration
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.5</a> at 29 Feb 2024, 7:35:48 pm</p>
+<a href="http://www.gradle.org">Gradle 8.5</a> at 11 Mar 2024, 5:17:36 pm</p>
 </div>
 </div>
 </body>
