@@ -24,7 +24,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final String key;
     private final UserService userService;
-//    private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/login");
     private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/login", "/api/v1/users/join");
 
 
@@ -38,6 +37,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }else{
                 final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+                log.info("AUTHRIZATION!!! : {}", header);
                 if(header == null || !header.startsWith("Bearer ")){
                     throw new RuntimeException("INVALID / MISSING HEADER");
                 }

@@ -1,5 +1,8 @@
 package com.yourLuck.yourLuck.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.yourLuck.yourLuck.controller.request.SendMessageRequest;
 import com.yourLuck.yourLuck.controller.response.SendMessageResponse;
 import com.yourLuck.yourLuck.exception.ErrorCode;
@@ -13,12 +16,14 @@ import com.yourLuck.yourLuck.repository.ChatRoomRepository;
 import com.yourLuck.yourLuck.repository.MessageRepository;
 import com.yourLuck.yourLuck.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,11 +32,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChatService {
 
-
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
     private final UserEntityRepository userEntityRepository;
     private final SimpMessagingTemplate messagingTemplate; // 메시지 전송을 위한 SimpMessagingTemplate 주입
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private UserEntity getUserEntityOrException(String userName) {
         return userEntityRepository.findByUserName(userName).orElseThrow(()->
@@ -75,53 +80,89 @@ public class ChatService {
         ChatRoomEntity chatRoomEntity = getChatRoomEntityOrException(chatRoomId);
         UserEntity userEntity = userEntityRepository.findById(sendMessageRequest.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // userName을 추출
         String userName = userEntity.getUserName();
-        // messageEntity를 생성하고 저장, 이 때부터 id 사용 가능
         MessageEntity messageEntity = MessageEntity.of(chatRoomEntity, sendMessageRequest.getMessageContent(), userName);
         messageRepository.save(messageEntity);
-
         // 저장된 messageEntity에서 id 추출
         Integer messageId = messageEntity.getId();
-
         // 메시지 전송을 위한 토픽
         String destination = String.format("/topic/chatroom.%d", chatRoomId);
         messagingTemplate.convertAndSend(destination, Message.fromEntity(messageEntity));
-
         // messageEntity의 Timestamp 값을 LocalDateTime으로 변환
         LocalDateTime timestamp = messageEntity.getRegisteredAt().toLocalDateTime();
-
         // SendMessageResponse 객체를 생성하여 반환
         SendMessageResponse response = new SendMessageResponse(messageId, userName, sendMessageRequest.getMessageContent(), timestamp);
 
+        String redisKey = "chatRoom:" + chatRoomId;
+
+        //Redis에  메시징 캐싱
+        Message messageDto = Message.fromEntity(messageEntity);
+        redisTemplate.opsForList().rightPush(redisKey, messageDto);
         return response;
     }
 
 
-    public List<Message> getMessagesFromChatRoom(Integer chatRoomId){
-        List<MessageEntity> messageEntities = messageRepository.findByChatRoomEntity_Id(chatRoomId);
-        return messageEntities.stream()
-                .map(Message::fromEntity)
-                .collect(Collectors.toList());
-    }
-    //주어진 채팅방 ID에 해당하는 모든 메시지의 목록을 조회하는 기존의 데이터베이스 쿼리를 이용한 방식입니다. 이 메소드는 특정 채팅방의 이전 메시지들을 가져올 때 유용하며, 예를 들어 사용자가 채팅방에 처음 진입할 때 지난 대화 내용을 로드하는 데 사용될 수 있습니다.
-
-
-//    TODO :실시간으로 메시지를 송수신하기 위해서는 클라이언트 측에서 서버로 메시지 발송 요청을 /app/sendMessage와 같은 엔드포인트를 통해 STOMP 프로토콜을 사용하여 전달하고, 서버는 SimpMessagingTemplate을 사용해 /topic/chatroom.{chatRoomId} 주소를 구독하는 모든 클라이언트에게 메시지를 전달해야 합니다. 따라서, 실시간으로 채팅 메시지를 수신하는 것은 getMessagesFromChatRoom 메소드가 아닌 클라이언트 측에서 설정된 STOMP 구독을 통해 이루어집니다. 예를 들어 클라이언트 측 JavaScript에서 SockJS와 STOMP 클라이언트를 사용하여 실시간 메시지를 수신할 수 있습니다.
-//    예시 : // SockJS와 STOMP 클라이언트 초기화
-//const socket = new SockJS('/ws-stomp');
-//const stompClient = Stomp.over(socket);
+//    public List<Message> getMessagesFromChatRoom(Integer chatRoomId){
+//        // Redis에서 채팅방 메시지 조회 시도
+//        String redisKey = "chatRoom:" + chatRoomId;
+//        // Redis 에서 메시지 리스트 조회
+//        List<Object> rawMessageEntities = redisTemplate.opsForList().range(redisKey, 0, -1);// 모든 메시지 조회
+//        if (rawMessageEntities == null || rawMessageEntities.isEmpty()) {
+//            // Redis에 데이터가 없는 경우 DB에서 조회 후 Redis에 저장
+//            List<MessageEntity> messageEntities = messageRepository.findByChatRoomEntity_Id(chatRoomId);
+//            rawMessageEntities = new ArrayList<>(messageEntities);
+//            // Redis에 저장
+//            messageEntities.forEach(messageEntity -> redisTemplate.opsForList().rightPush(redisKey, messageEntity));
+//        }
+//        return rawMessageEntities.stream()
+//                .filter(object -> object instanceof MessageEntity)
+//                .map(object -> (MessageEntity) object)
+//                .map(Message::fromEntity)
+//                .collect(Collectors.toList());
 //
-//// 서버에 연결하고 특정 채팅방을 구독
-//stompClient.connect({}, function (frame) {
-//    const chatRoomId = 1; // 예시 채팅방 ID
-//    stompClient.subscribe(`/topic/chatroom.${chatRoomId}`, function (messageOutput) {
-//        // 여기서 받은 메시지를 처리 (예: 화면에 표시)
-//        const message = JSON.parse(messageOutput.body);
-//        console.log(message);
-//    });
-//});
+//    }
+// MessageEntity를 MessageDto로 변환하는 메서드 예제
+private Message convertToDto(MessageEntity messageEntity) {
+    return new Message(messageEntity.getId(), messageEntity.getChatRoomEntity().getId(), messageEntity.getUserName(), messageEntity.getMessage(), messageEntity.getRegisteredAt());
+}
+    public List<Message> getMessagesFromChatRoom(Integer chatRoomId) {
+        String redisKey = "chatRoom:" + chatRoomId;
+        List<Object> objects = redisTemplate.opsForList().range(redisKey, 0, -1);
+        List<Message> messages = new ArrayList<>();
+
+        if (objects != null && !objects.isEmpty()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule()); // LocalDateTime 처리를 위해
+            // JSON 문자열을 Message 객체로 변환합니다.
+            messages = objects.stream()
+                    .map(obj -> {
+                        try {
+                            return objectMapper.readValue(obj.toString(), Message.class);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            // Redis에 데이터가 없는 경우 DB에서 조회
+            List<MessageEntity> messageEntities = messageRepository.findByChatRoomEntity_Id(chatRoomId);
+            // DB에서 조회한 Entity를 DTO로 변환
+            messages = messageEntities.stream().map(this::convertToDto).collect(Collectors.toList());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            // Redis에 DTO 리스트를 저장하기 전에 JSON 문자열로 변환
+            try {
+                String messagesJson = objectMapper.writeValueAsString(messages);
+                redisTemplate.opsForList().rightPush(redisKey, messagesJson);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return messages;
+    }
+
 
 
 }
+
+

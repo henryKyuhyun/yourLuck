@@ -1,5 +1,8 @@
 package com.yourLuck.yourLuck.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,11 +11,10 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table
-@Getter
-@Setter
+@Getter @Setter
 public class ChatRoomEntity {
 
     @Id
@@ -22,6 +24,7 @@ public class ChatRoomEntity {
     @Column(name = "room_name")
     private String chatRoomName;
 
+//@JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
@@ -35,7 +38,7 @@ public class ChatRoomEntity {
     )
     private Set<UserEntity> users = new HashSet<>();
 
-//    @OneToMany(mappedBy = "chatRoom")
+
     @OneToMany(mappedBy = "chatRoomEntity", cascade = CascadeType.ALL)
     private Set<MessageEntity> messageEntities = new HashSet<>();
 

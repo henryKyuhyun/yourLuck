@@ -5,6 +5,7 @@ import com.yourLuck.yourLuck.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Getter
@@ -12,11 +13,8 @@ import java.sql.Timestamp;
 public class Message {
 
     private Integer id;
-//    private ChatRoom chatRoom;
-private Integer chatRoomId; // ChatRoom 객체 대신 ID를 저장
-
+    private Integer chatRoomId;
     private String userName;
-
     private String message;
     private Timestamp registeredAt;
 

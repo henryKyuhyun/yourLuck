@@ -6,14 +6,22 @@ spring:
     password: zhtanf5246150!
 
   redis:
-    host: 127.0.0.1
-    port: 6380
-    database: 0
-    lettuce:
-      pool:
-        max-active: 10
-        max-idle: 10
-        min-idle: 2
+    host: localhost
+    post: 6379
+
+#  jackson:
+#    serialization:
+#      write-dates-as-timestamps: false
+
+  #  redis:
+#    host: 127.0.0.1
+#    port: 6380
+#    database: 0
+#    lettuce:
+#      pool:
+#        max-active: 10
+#        max-idle: 10
+#        min-idle: 2
 
   jpa:
     hibernate:
@@ -36,6 +44,8 @@ server:
 logging.level:
   org.hibernate.SQL: debug
 
+chatGpt:
+  api-key: "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"
 
 #upload:
 #  path: /Users/kyuhyunpark/Desktop/TeamOllehRepository/OllehBoardFront/olleh/src/assets

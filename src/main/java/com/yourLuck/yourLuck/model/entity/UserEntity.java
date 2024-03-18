@@ -1,5 +1,6 @@
 package com.yourLuck.yourLuck.model.entity;
 
+import com.fasterxml.jackson.annotation.*;
 import com.yourLuck.yourLuck.model.BloodType;
 import com.yourLuck.yourLuck.model.Gender;
 import lombok.Getter;
@@ -35,15 +36,21 @@ public class UserEntity {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @JsonIgnore
     @Column(name = "registered_at")
     private Timestamp registeredAt;
+    @JsonIgnore
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+    @JsonIgnore
     @Column(name = "removed_at")
     private Timestamp deletedAt;
 
+
+    //@JsonManagedReference
     @ManyToMany(mappedBy = "users")
     private Set<ChatRoomEntity> chatRooms = new HashSet<>();
+    // Jackson이 JSON으로부터 객체를 생성할 때 사용할 기본 생성자
 
     @PrePersist
     void registeredAt(){
@@ -58,7 +65,18 @@ public class UserEntity {
     @PreRemove
     void deletedAt(){ this.deletedAt = Timestamp.from(Instant.now());}
 
-    public static UserEntity of(String userName, String password ,String nation, LocalDateTime birthOfDayAndTime, BloodType bloodType, Gender gender) {
+    // @JsonCreator를 사용하여 JSON으로부터 객체를 생성할 때 사용할 명시적 생성자를 정의합니다.
+    @JsonCreator
+    public static UserEntity of(
+            @JsonProperty("userName") String userName,
+            @JsonProperty("password") String password,
+            @JsonProperty("nation") String nation,
+            @JsonProperty("birthOfDayAndTime") LocalDateTime birthOfDayAndTime,
+            @JsonProperty("bloodType") BloodType bloodType,
+            @JsonProperty("gender") Gender gender
+)
+    {
+
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(userName);
         userEntity.setPassword(password);
@@ -68,5 +86,20 @@ public class UserEntity {
         userEntity.setGender(gender);
 
         return userEntity;
-    }
+
 }
+
+//    public static UserEntity of(String userName, String password ,String nation, LocalDateTime birthOfDayAndTime, BloodType bloodType, Gender gender) {
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setUserName(userName);
+//        userEntity.setPassword(password);
+//        userEntity.setNation(nation);
+//        userEntity.setBirthOfDayAndTime(birthOfDayAndTime);
+//        userEntity.setBloodType(bloodType);
+//        userEntity.setGender(gender);
+//
+//        return userEntity;
+//    }
+
+}
+

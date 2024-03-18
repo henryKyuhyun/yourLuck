@@ -17,5 +17,4 @@ public class LuckControllerTest {
     @Autowired
     private LuckService luckService;
 
-
 }

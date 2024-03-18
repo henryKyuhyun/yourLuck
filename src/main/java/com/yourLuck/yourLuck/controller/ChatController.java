@@ -54,11 +54,11 @@ public ResponseEntity<ChatRoomJoinResponse> joinChatRoom(
             @RequestBody SendMessageRequest sendMessageRequest) {
 
         return ResponseEntity.ok(chatService.sendMessage(roomId, sendMessageRequest.getMessageContent(),sendMessageRequest));
-
     }
 
     @GetMapping("/room/{roomId}/messages")
     public ResponseEntity<List<Message>> getMessagesFromChatRoom(@PathVariable Integer roomId) {
-        return ResponseEntity.ok(chatService.getMessagesFromChatRoom(roomId));
+        List<Message> messages = chatService.getMessagesFromChatRoom(roomId);
+        return ResponseEntity.ok(messages);
     }
 }

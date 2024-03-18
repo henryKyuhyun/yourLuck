@@ -10,7 +10,7 @@ import java.time.Instant;
 @Entity
 @Table
 @Getter@Setter
-public class MessageEntity {
+public class MessageEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -47,5 +47,4 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         ;
     }
-
 }

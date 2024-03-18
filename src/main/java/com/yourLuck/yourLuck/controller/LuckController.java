@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LuckController {
 
-    private final UserService userService;
     private final LuckService luckService;
 
 
