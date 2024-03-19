@@ -6,6 +6,7 @@ import com.yourLuck.yourLuck.model.BloodType;
 import com.yourLuck.yourLuck.model.Gender;
 import com.yourLuck.yourLuck.model.User;
 import com.yourLuck.yourLuck.model.entity.UserEntity;
+import com.yourLuck.yourLuck.repository.UserCacheRepository;
 import com.yourLuck.yourLuck.repository.UserEntityRepository;
 import com.yourLuck.yourLuck.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +30,13 @@ public class UserService {
 
     private final UserEntityRepository userEntityRepository;
     private final BCryptPasswordEncoder encoder;
-
+    private final UserCacheRepository userCacheRepository;
 
     public User loadUserByUserName(String userName){
-        return userEntityRepository.findByUserName(userName)
-                .map(User::fromEntity)
-                .orElseThrow(() -> new LuckApplicationException(ErrorCode.USER_NOT_FOUNDED,String.format("%s not founded", userName)));
+        return userCacheRepository.getUser(userName).orElseGet(() ->
+                userEntityRepository.findByUserName(userName).map(User::fromEntity).orElseThrow(() ->
+                        new LuckApplicationException(ErrorCode.USER_NOT_FOUNDED,String.format("%s not founded", userName)))
+            );
     }
     @Transactional
     public User join(String userName, String password, String nation, LocalDateTime birthOfDayAndTime,BloodType bloodType, Gender gender){
@@ -54,6 +56,8 @@ public class UserService {
     public String login(String userName, String password) {
 //        회원가입여부체크
         User user = loadUserByUserName(userName);
+//        캐싱에서 가져오기
+        userCacheRepository.setUser(user);
 //        비밀번호확인
         if(!encoder.matches(password,user.getPassword())){
             throw new LuckApplicationException(ErrorCode.INVALID_PASSWORD);

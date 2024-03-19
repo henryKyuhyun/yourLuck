@@ -4,18 +4,30 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.yourLuck.yourLuck.model.Message;
+import com.yourLuck.yourLuck.model.User;
+import io.lettuce.core.RedisURI;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableRedisRepositories
+@RequiredArgsConstructor
 public class RedisConfig {
+    private final RedisProperties redisProperties;
 
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(
@@ -35,8 +47,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Message> MessageRedisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Message> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(connectionFactory);
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());
@@ -53,7 +65,26 @@ public class RedisConfig {
     }
 
     @Bean
-    public ChannelTopic channelTopic() { // (4)
+    public ChannelTopic channelTopic() {
         return new ChannelTopic("chatroom");
     }
+
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory(){
+        RedisURI redisURI = RedisURI.create(redisProperties.getUrl());
+        RedisConfiguration configuration = LettuceConnectionFactory.createRedisConfiguration(redisURI);
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(configuration);
+        factory.afterPropertiesSet();
+        return factory;
+    }
+    @Bean
+    public RedisTemplate<String, User> userRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, User> redisTemplate = new RedisTemplate<>();
+
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<User>(User.class));
+        return redisTemplate;
+    }
+
 }

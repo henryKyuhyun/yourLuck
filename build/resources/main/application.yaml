@@ -8,10 +8,13 @@ spring:
   redis:
     host: localhost
     post: 6379
+    url: redis://localhost:6379
+#    현재는 개발단계이기때문에 로컬로한다.
 
-#  jackson:
-#    serialization:
-#      write-dates-as-timestamps: false
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
 
   #  redis:
 #    host: 127.0.0.1

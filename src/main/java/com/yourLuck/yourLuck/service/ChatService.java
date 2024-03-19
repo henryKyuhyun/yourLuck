@@ -13,17 +13,16 @@ import com.yourLuck.yourLuck.model.entity.ChatRoomEntity;
 import com.yourLuck.yourLuck.model.entity.MessageEntity;
 import com.yourLuck.yourLuck.model.entity.UserEntity;
 import com.yourLuck.yourLuck.repository.ChatRoomRepository;
+import com.yourLuck.yourLuck.repository.MessageCacheRepository;
 import com.yourLuck.yourLuck.repository.MessageRepository;
 import com.yourLuck.yourLuck.repository.UserEntityRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final UserEntityRepository userEntityRepository;
     private final SimpMessagingTemplate messagingTemplate; // 메시지 전송을 위한 SimpMessagingTemplate 주입
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final MessageCacheRepository messageCacheRepository;
 
     private UserEntity getUserEntityOrException(String userName) {
         return userEntityRepository.findByUserName(userName).orElseThrow(()->
@@ -75,91 +74,50 @@ public class ChatService {
     }
 
     @Transactional
-    public SendMessageResponse sendMessage(Integer chatRoomId, String messageContent,SendMessageRequest sendMessageRequest) {
-        // chatRoom과 userEntity를 찾음
+    public SendMessageResponse sendMessage(Integer chatRoomId, String messageContent, SendMessageRequest sendMessageRequest) {
+
         ChatRoomEntity chatRoomEntity = getChatRoomEntityOrException(chatRoomId);
         UserEntity userEntity = userEntityRepository.findById(sendMessageRequest.getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String userName = userEntity.getUserName();
-        MessageEntity messageEntity = MessageEntity.of(chatRoomEntity, sendMessageRequest.getMessageContent(), userName);
+//        MessageEntity messageEntity = MessageEntity.of(chatRoomEntity,sendMessageRequest.getMessageContent(), userName);
+        MessageEntity messageEntity = MessageEntity.of(chatRoomEntity, userEntity, messageContent, userName);
+
         messageRepository.save(messageEntity);
-        // 저장된 messageEntity에서 id 추출
+
+        // 메시지 전송
         Integer messageId = messageEntity.getId();
-        // 메시지 전송을 위한 토픽
         String destination = String.format("/topic/chatroom.%d", chatRoomId);
         messagingTemplate.convertAndSend(destination, Message.fromEntity(messageEntity));
-        // messageEntity의 Timestamp 값을 LocalDateTime으로 변환
         LocalDateTime timestamp = messageEntity.getRegisteredAt().toLocalDateTime();
-        // SendMessageResponse 객체를 생성하여 반환
         SendMessageResponse response = new SendMessageResponse(messageId, userName, sendMessageRequest.getMessageContent(), timestamp);
 
-        String redisKey = "chatRoom:" + chatRoomId;
+        // Redis 캐싱 처리를 MessageCacheRepository를 통해 수행
+        messageCacheRepository.saveMessage(chatRoomId, Message.fromEntity(messageEntity));
 
-        //Redis에  메시징 캐싱
-        Message messageDto = Message.fromEntity(messageEntity);
-        redisTemplate.opsForList().rightPush(redisKey, messageDto);
         return response;
     }
 
 
-//    public List<Message> getMessagesFromChatRoom(Integer chatRoomId){
-//        // Redis에서 채팅방 메시지 조회 시도
-//        String redisKey = "chatRoom:" + chatRoomId;
-//        // Redis 에서 메시지 리스트 조회
-//        List<Object> rawMessageEntities = redisTemplate.opsForList().range(redisKey, 0, -1);// 모든 메시지 조회
-//        if (rawMessageEntities == null || rawMessageEntities.isEmpty()) {
-//            // Redis에 데이터가 없는 경우 DB에서 조회 후 Redis에 저장
-//            List<MessageEntity> messageEntities = messageRepository.findByChatRoomEntity_Id(chatRoomId);
-//            rawMessageEntities = new ArrayList<>(messageEntities);
-//            // Redis에 저장
-//            messageEntities.forEach(messageEntity -> redisTemplate.opsForList().rightPush(redisKey, messageEntity));
-//        }
-//        return rawMessageEntities.stream()
-//                .filter(object -> object instanceof MessageEntity)
-//                .map(object -> (MessageEntity) object)
-//                .map(Message::fromEntity)
-//                .collect(Collectors.toList());
-//
-//    }
-// MessageEntity를 MessageDto로 변환하는 메서드 예제
 private Message convertToDto(MessageEntity messageEntity) {
-    return new Message(messageEntity.getId(), messageEntity.getChatRoomEntity().getId(), messageEntity.getUserName(), messageEntity.getMessage(), messageEntity.getRegisteredAt());
+    return new Message(messageEntity.getId(), messageEntity.getChatRoomEntity().getId(),  messageEntity.getUserName(), messageEntity.getMessage(), messageEntity.getRegisteredAt());
 }
     public List<Message> getMessagesFromChatRoom(Integer chatRoomId) {
-        String redisKey = "chatRoom:" + chatRoomId;
-        List<Object> objects = redisTemplate.opsForList().range(redisKey, 0, -1);
-        List<Message> messages = new ArrayList<>();
+        // Redis에서 메시지 불러오기를 MessageCacheRepository를 통해 수행
+        List<Message> messages = messageCacheRepository.getMessages(chatRoomId);
 
-        if (objects != null && !objects.isEmpty()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule()); // LocalDateTime 처리를 위해
-            // JSON 문자열을 Message 객체로 변환합니다.
-            messages = objects.stream()
-                    .map(obj -> {
-                        try {
-                            return objectMapper.readValue(obj.toString(), Message.class);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .collect(Collectors.toList());
-        } else {
-            // Redis에 데이터가 없는 경우 DB에서 조회
+        if (messages.isEmpty()) {
+            // Redis에 메시지가 없는 경우, DB에서 불러와 Redis에 저장
             List<MessageEntity> messageEntities = messageRepository.findByChatRoomEntity_Id(chatRoomId);
-            // DB에서 조회한 Entity를 DTO로 변환
             messages = messageEntities.stream().map(this::convertToDto).collect(Collectors.toList());
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            // Redis에 DTO 리스트를 저장하기 전에 JSON 문자열로 변환
-            try {
-                String messagesJson = objectMapper.writeValueAsString(messages);
-                redisTemplate.opsForList().rightPush(redisKey, messagesJson);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+            // 불러온 메시지들을 Redis에 저장
+            messages.forEach(message -> messageCacheRepository.saveMessage(chatRoomId, message));
         }
+
         return messages;
     }
+
 
 
 
