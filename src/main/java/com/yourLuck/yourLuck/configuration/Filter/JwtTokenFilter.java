@@ -26,14 +26,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final UserService userService;
     private final static List<String> TOKEN_IN_PARAM_URLS = List.of("/api/v1/users/login", "/api/v1/users/join");
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String token;
         try {
             if (TOKEN_IN_PARAM_URLS.contains(request.getRequestURI())) {
                 filterChain.doFilter(request, response);
-
                 return;
             }else{
                 final String header = request.getHeader(HttpHeaders.AUTHORIZATION);

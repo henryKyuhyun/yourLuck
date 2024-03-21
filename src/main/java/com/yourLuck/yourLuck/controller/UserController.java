@@ -28,15 +28,15 @@ public class UserController {
        return Response.success(UserJoinResponse.fromUser(user));
    }
 
-@PostMapping("/login")
-public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
-    String token = userService.login(request.getName(), request.getPassword());
-    // 로그인한 사용자 정보를 가져옵니다.
-    User user = userService.loadUserByUserName(request.getName());
-    // 토큰과 사용자 정보를 포함한 응답 객체를 생성합니다.
-    UserLoginResponse loginResponse = new UserLoginResponse(token, user);
-    return Response.success(loginResponse);
-}
+    @PostMapping("/login")
+    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
+        String token = userService.login(request.getName(), request.getPassword());
+        // 로그인한 사용자 정보를 가져옵니다.
+        User user = userService.loadUserByUserName(request.getName());
+        // 토큰과 사용자 정보를 포함한 응답 객체를 생성합니다.
+        UserLoginResponse loginResponse = new UserLoginResponse(token, user);
+        return Response.success(loginResponse);
+   }
 }
 
 

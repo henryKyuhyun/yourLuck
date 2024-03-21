@@ -45,7 +45,6 @@ public class UserService {
             throw new LuckApplicationException(ErrorCode.DUPLICATED_USER_NAME,String.format("%s is duplicated", userName));
         });
 
-//        LocalDateTime birthOfDayAndTime = LocalDateTime.now();
 //        회원가입 진행
         UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName,encoder.encode(password), nation, birthOfDayAndTime, bloodType, gender));
         return User.fromEntity(userEntity);
