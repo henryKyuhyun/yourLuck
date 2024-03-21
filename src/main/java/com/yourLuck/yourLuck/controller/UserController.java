@@ -8,6 +8,8 @@ import com.yourLuck.yourLuck.controller.response.UserLoginResponse;
 import com.yourLuck.yourLuck.model.User;
 import com.yourLuck.yourLuck.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,9 +28,20 @@ public class UserController {
        return Response.success(UserJoinResponse.fromUser(user));
    }
 
-   @PostMapping("/login")
-    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
-       String token = userService.login(request.getName(), request.getPassword());
-       return Response.success(new UserLoginResponse(token));
-   }
+@PostMapping("/login")
+public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
+    String token = userService.login(request.getName(), request.getPassword());
+    // 로그인한 사용자 정보를 가져옵니다.
+    User user = userService.loadUserByUserName(request.getName());
+    // 토큰과 사용자 정보를 포함한 응답 객체를 생성합니다.
+    UserLoginResponse loginResponse = new UserLoginResponse(token, user);
+    return Response.success(loginResponse);
 }
+}
+
+
+//   @PostMapping("/login")
+//    public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request){
+//       String token = userService.login(request.getName(), request.getPassword());
+//       return Response.success(new UserLoginResponse(token));
+//   }

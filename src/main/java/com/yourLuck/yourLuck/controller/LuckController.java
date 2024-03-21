@@ -20,7 +20,6 @@ public class LuckController {
 
     private final LuckService luckService;
 
-
     @GetMapping("/todayLuck")
     public Response<FortuneResponseDTO> getFortune(@AuthenticationPrincipal User user) {
         String message = luckService.calculateFortune(user);
